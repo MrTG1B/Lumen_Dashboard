@@ -109,7 +109,7 @@ function setGaugeValue(value,background,percentage,color) {
 }
 const energyConsumptionBar = document.getElementById('energyConsumptionBar');
 const totalEnergyConsumptionText = document.getElementById('totalEnergyConsumptionText');
-setInterval(() => setGaugeValue(Math.floor(Math.random() * 100),energyConsumptionBar,totalEnergyConsumptionText,"red"), 10000);
+setInterval(() => setGaugeValue(Math.floor(Math.random() * 100),energyConsumptionBar,totalEnergyConsumptionText,"red"), 1000);
 
 const energySavedBar = document.getElementById('energySavedBar');
 const totalEnergySavedText = document.getElementById('totalEnergySavedText');
