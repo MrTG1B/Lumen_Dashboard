@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Luma-Dashboard</title>
+    <link rel="stylesheet" href="dashboard_static/dashboard_style.css">
+    <link rel="manifest" href="static/manifest.json">
+    <link rel="image/png" href="/assets/images/logo.png">
+    <link rel="icon" type="image/png" href="/assets/images/logo.png">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Luma">
+    <meta property="og:description" content="Luma - Your smart solution for street lighting by Lumen Labs.">
+    <meta property="og:image" content="/assets/images/logo.png">
+    <meta property="og:url" content="https://6883cjlh-5501.inc1.devtunnels.ms/">
+    <meta property="og:type" content="website">
+</head>
+<body id="main-window-body">
+        <div id="left-panel">
+            <div id="areaNameContainer">
+                <header id="areaNameSearch">
+                    <input type="text" id="areaNameInput" placeholder="Search Area Name">
+                </header>
+                <div id="areaNameList" class="listContainer">
+                </div>
+            </div>
+
+            <div id="profile">
+                <div id="profilePicture">
+                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile Picture">
+                </div>
+                <p id="profileName">Tirtha</p>
+            </div>
+
+        </div>
+
+        <div id="middle-panel">
+            <div id="mapContainer" class="middle-panel-cards">
+                <iframe id="map" src=""></iframe>
+            </div>
+            
+            
+            <div id="dateTimeContainer" class="middle-panel-cards">
+                <p id="timeText">--:--:--</p>
+                <p id="ampmText">--</p>
+                <p id="dateText">---,--- --</p>
+            </div>
+
+            <div id="totalEnergyConsumptionConatiner" class="middle-panel-cards">
+                <div class="backCircle"></div>
+                <div class="progressBar" id="energyConsumptionBar"></div>
+                <div class="frontCircle"></div>
+                <h2 class="gauge-text" >
+                    <span class="gauge-value" id="totalEnergyConsumptionText" style="color: red;">--</span>kWh
+                </h2>
+            </div>
+            <div id="cctvContainer" class="middle-panel-cards">CCTV CONTROL</div>
+            <div id="solarDetailsContainer" class="middle-panel-cards">SOLAR DETAILS</div>
+            <div id="totalEnergySavedContainer" class="middle-panel-cards">
+                <div class="backCircle"></div>
+                <div class="progressBar" id="energySavedBar"></div>
+                <div class="frontCircle"></div>
+                <h2 class="gauge-text" >
+                    <span class="gauge-value" id="totalEnergySavedText" style="color: green;">--</span>kWh
+                </h2>
+                
+            </div>
+        </div>
+
+        <div id="right-panel">
+            <div id="LightPostContainer">
+
+                <div id="allLightsContainer">
+                    <header id="lightNameSearch" class="lightNameSearch">
+                        <input type="text" id="lightNameInput" class ="lightNameInput" placeholder="Search Light Post Number">
+                    </header>
+                    <div id="lightNameList" class="listContainer">
+
+                    </div>
+                </div>
+
+                <div id="faultyLightsContainer" style="display: none;">
+                    <button id="faultySearchBtn" class="button">
+                        <span class="one">Fault Search</span>
+                        <img class="two" src="/assets/images/radar.gif" alt="faulty" width="35px" height="35px">
+                    </button>
+                    
+                    <header id="faultyLightNameSearch" class="lightNameSearch">
+                        <input type="text" id="faultyLightNameInput" class ="lightNameInput" placeholder="Search Faulty Light Post Number">
+                    </header>
+                    <div id="faultyLightNameList" class="listContainer">
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="accessPanel">
+                    <label class="radio">
+                        <input type="radio" name="radio" checked="">
+                        <img class="name" src="/assets/images/lights.png" alt="lights" width="40px" height="40px">
+                    </label>
+        
+                    <label class="radio">
+                        <input type="radio" name="radio">
+                        <img class="name" src="/assets/images/faulty.png" alt="faulty" width="40px" height="40px">
+                    </label>
+            </div>
+        </div>
+</body>
+<script src="dashboard_static/dashboard_script.js"></script>
+</html>
