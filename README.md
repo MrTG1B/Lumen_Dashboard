@@ -1,32 +1,51 @@
-Lumen Dashboard
-Overview
-Lumen Dashboard is an interactive and visually appealing web application designed for data visualization and management. Built using a mix of modern technologies such as JavaScript, Python, and HTML/CSS, it provides a user-friendly interface for monitoring and controlling various data metrics, helping users make informed decisions efficiently.
+# Lumen Dashboard
 
-Features
-Dynamic Dashboard: Real-time data visualization for critical metrics.
-Backend Integration: Python-based backend to handle data processing and API requests.
-Interactive UI: JavaScript-powered interactive charts and graphs.
-Responsive Design: Fully responsive design using CSS for mobile and desktop views.
-Installation
-Clone the repository:
-bash
-Copy code
-git clone https://github.com/MrTG1B/Lumen_Dashboard.git
+## Overview
+Lumen Dashboard is a data visualization platform built using the **Lumen** micro-framework, designed for lightweight and efficient data management. It allows real-time data insights, metrics tracking, and customizable components, enabling users to monitor system activities easily.
+
+## Features
+- **Real-time Data Updates**: Displays live data from various sources.
+- **Customizable Widgets**: Rearrange and configure dashboard components.
+- **RESTful API Integration**: Supports API endpoints for data retrieval and manipulation.
+- **Responsive Design**: Optimized for desktop and mobile use.
+
+## Tech Stack
+- **Backend**: Lumen (PHP micro-framework)
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Database**: MySQL
+
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/MrTG1B/Lumen_Dashboard.git
 Navigate to the project directory:
 bash
 Copy code
 cd Lumen_Dashboard
-Follow instructions to install dependencies and run the project.
+Install dependencies:
+bash
+composer install
+Set up the .env file:
+Update your database credentials and other settings.
+Run database migrations:
+bash
+Copy code
+php artisan migrate
+Start the development server:
+bash
+Copy code
+php -S localhost:8000 -t public
 Usage
-Navigate to the dashboard by opening index.html in your browser.
-Use the interactive UI to explore various data visualizations.
-Technologies Used
-Frontend: HTML, CSS, JavaScript
-Backend: Python
-Other: Lumen Framework
+Open your browser and visit http://localhost:8000 to access the dashboard.
+Customize your widgets and explore data visualizations.
+Monitor real-time metrics and generate reports.
 Contribution
-Feel free to fork this repository, create a branch, and make a pull request for any improvements or bug fixes.
+We welcome contributions! To contribute:
 
+Fork this repository.
+Create a new branch (git checkout -b feature-branch).
+Commit your changes (git commit -m 'Add feature').
+Push to the branch (git push origin feature-branch).
+Open a pull request.
 License
 This project is licensed under the MIT License.
-
