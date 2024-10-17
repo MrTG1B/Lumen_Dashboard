@@ -18,34 +18,36 @@ Lumen Dashboard is a data visualization platform built using the **Lumen** micro
 1. Clone the repository:
    ```bash
    git clone https://github.com/MrTG1B/Lumen_Dashboard.git
-Navigate to the project directory:
-bash
-Copy code
-cd Lumen_Dashboard
-Install dependencies:
-bash
-composer install
-Set up the .env file:
-Update your database credentials and other settings.
-Run database migrations:
-bash
-Copy code
-php artisan migrate
-Start the development server:
-bash
-Copy code
-php -S localhost:8000 -t public
-Usage
-Open your browser and visit http://localhost:8000 to access the dashboard.
-Customize your widgets and explore data visualizations.
-Monitor real-time metrics and generate reports.
-Contribution
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd Lumen_Dashboard
+   ```
+3. Install dependencies:
+   ```bash
+   composer install
+   ```
+4. Set up the .env file:
+   Update your database credentials and other settings.
+5. Run database migrations:
+   ```bash
+      php artisan migrate
+   ```
+6. Start the development server:
+   ```bash
+   php -S localhost:8000 -t public
+   ```
+## Usage
+1. Open your browser and visit http://localhost:8000 to access the dashboard.
+2. Customize your widgets and explore data visualizations.
+3. Monitor real-time metrics and generate reports.
+## Contribution
 We welcome contributions! To contribute:
 
-Fork this repository.
-Create a new branch (git checkout -b feature-branch).
-Commit your changes (git commit -m 'Add feature').
-Push to the branch (git push origin feature-branch).
-Open a pull request.
-License
+1. Fork this repository.
+2. Create a new branch (git checkout -b feature-branch).
+3. Commit your changes (git commit -m 'Add feature').
+4. Push to the branch (git push origin feature-branch).
+5. Open a pull request.
+## License
 This project is licensed under the MIT License.
