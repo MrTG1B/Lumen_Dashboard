@@ -177,6 +177,19 @@ function createRadioList(mode,text_list,listId,radioClassName,textClassName) {
                 const label = btn.nextElementSibling;
                 label.style.color = 'white';
             });
+
+            let areaName = '';
+
+            const areaRadio= document.querySelectorAll('input[name="arearadio"]');
+
+            areaRadio.forEach((radio1) => {
+                if (radio1.checked) {
+                    const label = radio1.nextElementSibling;
+                    areaName = label.textContent;
+                    console.log(areaName);
+                    // createFaultyLightListButtons(areaName);
+                }
+            });
             
             // Set the color of the selected radio button's text to black
             if (radio.checked) {
@@ -187,10 +200,39 @@ function createRadioList(mode,text_list,listId,radioClassName,textClassName) {
                     createLightListButtons(label.textContent);
                     createFaultyLightListButtons(label.textContent); // Calling the function
                 }
+                else if (mode === 1) {
+                    createLightPostMap(label.textContent,areaName);
+                }
             }
         });
     });
 }
+
+async function createLightPostMap(light, area) {
+    try {
+        // Encode 'light' and 'area' to handle special characters like '/'
+        const encodedLight = encodeURIComponent(light);
+        const encodedArea = encodeURIComponent(area);
+
+        // Construct the URL using the encoded values
+        const response = await fetch(`https://6883cjlh-8080.inc1.devtunnels.ms/${encodedArea}/${encodedLight}/location_src`);
+        
+        // Check if the response is successful
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Get the text data from the response
+        const data = await response.text();
+
+        // Set the src of the map iframe
+        const map = document.getElementById('map');
+        map.src = data;
+    } catch (error) {
+        console.error('Error fetching src:', error);
+    }
+}
+
 
 async function createAreaListButtons() {
     try {
