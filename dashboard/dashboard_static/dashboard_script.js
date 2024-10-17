@@ -233,7 +233,6 @@ async function createLightPostMap(light, area) {
     }
 }
 
-
 async function createAreaListButtons() {
     try {
         // Fetch the data from the Flask server's /arealist endpoint
@@ -356,4 +355,8 @@ async function getMap(areaName) {
 }
 
 // Call the function to create buttons when the page loads
-window.onload = createAreaListButtons;
+window.onload = function() {
+    setTimeout(function() {
+        createAreaListButtons();
+    }, 2000);
+}
