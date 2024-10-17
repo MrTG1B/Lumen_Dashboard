@@ -191,7 +191,7 @@
 #mapContainer iframe{
     object-fit: contain;  /* Contain the image without cropping, maintaining aspect ratio */
     display: block;
-    /* filter: invert(100%); */
+    filter: invert(100%);
 }
 
 #dateTimeContainer{

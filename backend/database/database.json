@@ -7,11 +7,31 @@
                 "location_src": "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d921.0069053028756!2d88.4744402694516!3d22.578070237037288!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjLCsDM0JzQxLjEiTiA4OMKwMjgnMzAuMyJF!5e0!3m2!1sen!2sin!4v1729098791922!5m2!1sen!2sin",
                 "ip": "38.0.101.76"
             },
-            "L/P002": 2,
-            "L/P003": 3,
-            "L/P004": 4,
-            "L/P005": 5,
-            "L/P006": 6,
+            "L/P002": {
+                "name": "L/P002",
+                "location_src":"https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d921.0071191905373!2d88.47465226945162!3d22.57803823703759!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjLCsDM0JzQwLjkiTiA4OMKwMjgnMzEuMSJF!5e0!3m2!1sen!2sin!4v1729151731254!5m2!1sen!2sin",
+                "ip": "237.84.2.178"
+            },
+            "L/P003": {
+                "name": "L/P003",
+                "location_src":"https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d921.0070675924757!2d88.47523388056612!3d22.578045956691536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjLCsDM0JzQwLjkiTiA4OMKwMjgnMzEuNSJF!5e0!3m2!1sen!2sin!4v1729151819316!5m2!1sen!2sin",
+                "ip": "237.84.2.178"
+            },
+            "L/P004": {
+                "name": "L/P004",
+                "location_src":"https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d921.007446705461!2d88.47493326945158!3d22.577989237037997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjLCsDM0JzQwLjgiTiA4OMKwMjgnMzIuMSJF!5e0!3m2!1sen!2sin!4v1729151944806!5m2!1sen!2sin",
+                "ip": "237.84.2.178"
+            },
+            "L/P005": {
+                "name": "L/P005",
+                "location_src":"https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d921.0076271725808!2d88.47506226945161!3d22.57796223703828!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjLCsDM0JzQwLjciTiA4OMKwMjgnMzIuNSJF!5e0!3m2!1sen!2sin!4v1729152585734!5m2!1sen!2sin",
+                "ip": "237.84.2.178"
+            },
+            "L/P006": {
+                "name": "L/P006",
+                "location_src":"https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d921.0077742197149!2d88.4751882694516!3d22.577940237038465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjLCsDM0JzQwLjYiTiA4OMKwMjgnMzMuMCJF!5e0!3m2!1sen!2sin!4v1729152645701!5m2!1sen!2sin",
+                "ip": "237.84.2.178"
+            },
             "L/P007": 7,
             "L/P008": 8,
             "L/P009": 9,
