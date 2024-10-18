@@ -346,6 +346,7 @@ async function getMap(areaName) {
         const data = await response.text();
         const map= document.getElementById('map');
         map.src = data;
+        map.style.filter='invert(100%)';
         map.onload = function() {
             console.log('Map loaded successfully');
         };
