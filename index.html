@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
     <title>Luma-Dashboard</title>
     <link rel="stylesheet" href="static/style.css">
+    <link rel="manifest" href="/manifest.json">
     <link rel="image/png" href="https://luma-dashboard.netlify.app/assets/images/logo.png">
     <link rel="icon" type="image/png" href="https://luma-dashboard.netlify.app/assets/images/logo.png">
 
@@ -14,6 +15,19 @@
     <meta property="og:image" content="https://luma-dashboard.netlify.app/assets/images/logo.png">
     <meta property="og:url" content="https://luma-dashboard.netlify.app/">
     <meta property="og:type" content="website">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    }).catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </head>
 <body id="login-body">
     <div id="login-main-container">
