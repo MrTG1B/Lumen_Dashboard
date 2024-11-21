@@ -8,7 +8,8 @@
     margin:0px;
     padding: 0px;
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    overflow: hidden;
 }
 
 #left-panel{
@@ -523,6 +524,35 @@
     /* box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06); */
     padding: 0.25rem;
     font-size: 14px;
+}
+
+#lpDetailsContainer{
+    flex-direction: row;
+    justify-content: space-around;
+    align-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: #121313;
+    width: 67%;
+    height: 25%;
+    z-index: 100;
+    top: 0; 
+    left: 0; 
+    margin:8px; 
+    border-radius: 10px;
+    padding:10px;
+}
+
+#lpDetailsContainer p{
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#lpDetailsContainer p span{
+    color: #CA4C49;
+    font-size: 12px;
+    font-weight: normal;
 }
 
 .radio {

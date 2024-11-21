@@ -109,11 +109,15 @@ function setGaugeValue(value,background,percentage,color) {
 }
 const energyConsumptionBar = document.getElementById('energyConsumptionBar');
 const totalEnergyConsumptionText = document.getElementById('totalEnergyConsumptionText');
-setInterval(() => setGaugeValue(Math.floor(Math.random() * 100),energyConsumptionBar,totalEnergyConsumptionText,"red"), 1000);
+
+setGaugeValue(20,energyConsumptionBar,totalEnergyConsumptionText,"red");
+// setInterval(() => setGaugeValue(Math.floor(Math.random() * 100),energyConsumptionBar,totalEnergyConsumptionText,"red"), 1000);
 
 const energySavedBar = document.getElementById('energySavedBar');
 const totalEnergySavedText = document.getElementById('totalEnergySavedText');
-setInterval(() => setGaugeValue(Math.floor(Math.random() * 100),energySavedBar,totalEnergySavedText,"green"), 10000);
+
+setGaugeValue(80,energySavedBar,totalEnergySavedText,"green");
+// setInterval(() => setGaugeValue(Math.floor(Math.random() * 100),energySavedBar,totalEnergySavedText,"green"), 10000);
 
 
 
@@ -201,11 +205,53 @@ function createRadioList(mode,text_list,listId,radioClassName,textClassName) {
                     createFaultyLightListButtons(label.textContent); // Calling the function
                 }
                 else if (mode === 1) {
+                    document.getElementById('lpDetailsContainer').style.display = 'none';
                     createLightPostMap(label.textContent,areaName);
+                    showLpDetails(label.textContent,areaName);
                 }
             }
         });
     });
+}
+
+async function showLpDetails(light,area){
+    try {
+        // Encode 'light' and 'area' to handle special characters like '/'
+        const encodedLight = encodeURIComponent(light);
+        const encodedArea = encodeURIComponent(area);
+
+        // Construct the URL using the encoded values
+        const response = await fetch(`https://6883cjlh-8080.inc1.devtunnels.ms/${encodedArea}/${encodedLight}/lpdetails`);
+        
+        // Check if the response is successful
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Get the text data from the response
+        const data = await response.json();
+
+        // Set the src of the map iframe
+        const lpNumber = document.getElementById('lpNumber');
+        const areaName = document.getElementById('areaName');
+        const volatge = document.getElementById('voltage');
+        const current = document.getElementById('current');
+        const power = document.getElementById('power');
+        const energy = document.getElementById('energy');
+        const installationDate = document.getElementById('installationDate');
+        const lastServiceDate = document.getElementById('lastServiceDate');
+
+        lpNumber.textContent = data.name;
+        areaName.textContent = area;
+        volatge.textContent = data.voltage;
+        current.textContent = data.current;
+        power.textContent = data.power;
+        energy.textContent = data.energy;
+        installationDate.textContent = data.installation_date;
+        lastServiceDate.textContent = data.last_service_date;
+    } catch (error) {
+        console.error('Error fetching src:', error);
+    }
 }
 
 async function createLightPostMap(light, area) {
@@ -228,8 +274,10 @@ async function createLightPostMap(light, area) {
         // Set the src of the map iframe
         const map = document.getElementById('map');
         map.src = data;
+        document.getElementById('lpDetailsContainer').style.display = 'flex';
     } catch (error) {
         console.error('Error fetching src:', error);
+        document.getElementById('lpDetailsContainer').style.display = 'none';
     }
 }
 
