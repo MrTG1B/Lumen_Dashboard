@@ -18,38 +18,58 @@ radioButtons.forEach((radio) => {
     });
 });
 
-document.getElementById('faultySearchBtn').addEventListener('click', function() {
+const socket = io(); // Initialize Socket.IO connection
+
+document.getElementById('faultySearchBtn').addEventListener('click', async function() {
     this.classList.toggle('clicked');
-
-    // Store the reference to the button
+    
+    // Store button reference
     const button = this;
-
-    // button.style.
     
     let areaName = '';
-    const lightListContainer = document.getElementById('faultyLightNameList');
-    // Clear the container
-    lightListContainer.innerHTML = '';
+    const areaRadio = document.querySelectorAll('input[name="arearadio"]');
 
-    const areaRadio= document.querySelectorAll('input[name="arearadio"]');
-
+    // Get selected area name
     areaRadio.forEach((radio) => {
         if (radio.checked) {
             const label = radio.nextElementSibling;
-            areaName = label.textContent;
-            console.log(areaName);
-            // createFaultyLightListButtons(areaName);
+            areaName = label.textContent.trim();
+            console.log(`Selected area: ${areaName}`);
         }
     });
-    
 
-    
-    // Remove the 'clicked' class after 10 seconds (10000 milliseconds)
-    setTimeout(function() {
+    if (!areaName) {
+        alert("Please select an area first.");
+        button.classList.remove('clicked'); // Reset button state
+        return;
+    }
+
+    // Send fault search request to the server
+    socket.emit('/fault_search', { area: areaName });
+
+    console.log(`Fault search request sent for: ${areaName}`);
+
+    // Remove the 'clicked' class after 10 seconds
+    setTimeout(async function() {
         button.classList.remove('clicked');
-        createFaultyLightListButtons(areaName)
+        
+        // Fetch the faulty light list after search
+        await createFaultyLightListButtons(areaName);
+        
     }, 10000);
 });
+
+// Listen for fault search results from the server
+socket.on('/fault_search_response', function(data) {
+    console.log("Received fault search response:", data);
+
+    if (data.faults && data.faults.length > 0) {
+        createFaultyLightListButtons(data.area);
+    } else {
+        alert("No faults detected in the selected area.");
+    }
+});
+
 
 const timeText = document.getElementById("timeText");
 const dateText = document.getElementById("dateText");

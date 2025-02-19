@@ -1,131 +1,110 @@
-from flask import Flask
-from flask_cors import CORS  # Ensure CORS is enabled
-import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # Enable CORS
+from flask_socketio import SocketIO
 import json
-import urllib.parse
 
 app = Flask(__name__)
-port_number = 8080
-
-# Enable CORS to allow cross-origin requests from the client
 CORS(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+database_path = 'backend/database/database.json'
+
+def load_database():
+    with open(database_path) as f:
+        return json.load(f)
+
+def save_database(data):
+    with open(database_path, 'w') as f:
+        json.dump(data, f, indent=4)
+
+@app.route('/')
+def home():
+    return "Lumen Dashboard Server is Running!", 200
 
 @app.route('/<module_name>/ir/<state>', methods=['GET'])
 def module_name_ir_state(module_name, state):
-    with open('backend/database/database.json') as f:
-        data = json.load(f)
-        if module_name in data:
-            if state == 'on':
-                return 'Turned on', 200
-            elif state == 'off':
-                return 'Turned off', 200
-            else:
-                return 'Invalid state', 400
-        else:
-            return 'Module not found', 404
-
-
+    data = load_database()
+    if module_name in data:
+        if state == 'on':
+            return 'Turned on', 200
+        elif state == 'off':
+            return 'Turned off', 200
+        return 'Invalid state', 400
+    return 'Module not found', 404
 
 @app.route('/arealist', methods=['GET'])
 def arealist():
-    with open('backend/database/database.json') as f:
-        data = json.load(f)
-        keys_str = "\n".join(data.keys())
-        return keys_str, 200
+    data = load_database()
+    return "\n".join(data.keys()), 200
 
 @app.route('/area/<area_name>/lp', methods=['GET'])
 def area_name_lp(area_name):
-    with open('backend/database/database.json') as f:
-        data = json.load(f)
-        if area_name in data:
-            lp_keys="\n".join(data[area_name]['lp'].keys())
-            return lp_keys, 200
-        else:
-            return "Area not found", 404
-        
+    data = load_database()
+    if area_name in data:
+        return "\n".join(data[area_name]['lp'].keys()), 200
+    return "Area not found", 404
+
 @app.route('/area/<area_name>/map', methods=['GET'])
-def area_name_src(area_name):
-    with open('backend/database/database.json') as f:
-        data = json.load(f)
-        if area_name in data:
-            return data[area_name]['src'], 200
-        else:
-            return "Area not found", 404
+def area_name_map(area_name):
+    data = load_database()
+    return data.get(area_name, {}).get('src', "Area not found"), 200
 
 @app.route('/area/<area_name>/faulty_lp', methods=['GET'])
 def area_name_faulty_lp(area_name):
-    with open('backend/database/database.json') as f:
-        data = json.load(f)
-        if area_name in data:
-            if data[area_name]['faulty_lp']:
-                faulty_lp_keys="\n".join(data[area_name]['faulty_lp'].keys())
-                return faulty_lp_keys, 200
-            else:
-                return "No faulty lights", 204
-        else:
-            return "Area not found", 404
+    data = load_database()
+    if area_name in data and data[area_name]['faulty_lp']:
+        return "\n".join(data[area_name]['faulty_lp'].keys()), 200
+    return "No faulty lights", 204
 
 @app.route('/<area_name>/<light_name>/<key>', methods=['GET'])
 def area_name_light_name_key(area_name, light_name, key):
+    data = load_database()
     try:
-        # Decode URL-encoded light_name and area_name (optional, Flask does this automatically)
-        decoded_area_name = urllib.parse.unquote(area_name)
-        decoded_light_name = urllib.parse.unquote(light_name)
-        decoded_key = urllib.parse.unquote(key)
-
-        # Load the data from the JSON file
-        with open('backend/database/database.json') as f:
-            data = json.load(f)
-
-            # Check if area_name exists in the data
-            if decoded_area_name in data:
-                # Check if light_name exists under the area's 'lp' key
-                if decoded_light_name in data[decoded_area_name]['lp']:
-                    # Check if the requested key exists for the light_name
-                    if decoded_key in data[decoded_area_name]['lp'][decoded_light_name]:
-                        return data[decoded_area_name]['lp'][decoded_light_name][decoded_key], 200
-                    else:
-                        print("Key not found")
-                        return "Key not found", 404
-                else:
-                    print("Light not found")
-                    return "Light not found", 404
-            else:
-                print("Area not found")
-                return "Area not found", 404
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return "Server error", 500
+        return data[area_name]['lp'][light_name][key], 200
+    except KeyError:
+        return "Key/Light/Area not found", 404
 
 @app.route('/<area_name>/<light_name>/lpdetails', methods=['GET'])
 def area_name_light_name_lpdetails(area_name, light_name):
-    try:
-        # Decode URL-encoded light_name and area_name (optional, Flask does this automatically)
-        decoded_area_name = urllib.parse.unquote(area_name)
-        decoded_light_name = urllib.parse.unquote(light_name)
-        
+    data = load_database()
+    return jsonify(data.get(area_name, {}).get('lp', {}).get(light_name, "Light not found")), 200
 
-        # Load the data from the JSON file
-        with open('backend/database/database.json') as f:
-            data = json.load(f)
+@app.route('/data', methods=['POST'])
+def receive_data():
+    content = request.json
+    print(f"Received Data: {content}")
+    return jsonify({"status": "success"}), 200
 
-            # Check if area_name exists in the data
-            if decoded_area_name in data:
-                # Check if light_name exists under the area's 'lp' key
-                if decoded_light_name in data[decoded_area_name]['lp']:
-                    # Check if the requested key exists for the light_name
-                    return json.dumps(data[decoded_area_name]['lp'][decoded_light_name]), 200
-                else:
-                    print("Light not found")
-                    return "Light not found", 404
-            else:
-                print("Area not found")
-                return "Area not found", 404
+@app.route('/energy', methods=['POST'])
+def receive_energy_data():
+    content = request.json
+    print(f"Received Energy Data: {content}")
+    return jsonify({"status": "success"}), 200
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return "Server error", 500
+@app.route('/fault', methods=['POST'])
+def receive_fault_data():
+    content = request.json
+    print(f"Received Fault Data: {content}")
+    return jsonify({"status": "success"}), 200
+
+@socketio.on('/led/on')
+def handle_led_on():
+    print("LED ON command received via Socket.IO")
+
+@socketio.on('/fault_search_result')
+def handle_fault_search_result(data):
+    print(f"Received fault search result from ESP32: {data}")
+    
+    # Forward the result to the client dashboard
+    socketio.emit('/fault_search_response', data)
+    
+@socketio.on('/fault_search')
+def handle_fault_search():
+    print("Client requested fault search")
+    
+    # Emit fault search request to ESP32
+    socketio.emit('/fault_search_esp')
+
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=port_number, debug=True)
+    socketio.run(app, host='0.0.0.0', port=8080, debug=True)
