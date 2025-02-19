@@ -70,7 +70,6 @@ socket.on('/fault_search_response', function(data) {
     }
 });
 
-
 const timeText = document.getElementById("timeText");
 const dateText = document.getElementById("dateText");
 
