@@ -4,6 +4,7 @@ import json
 import os
 import requests
 import concurrent.futures
+from urllib.parse import unquote
 
 app = Flask(__name__)
 CORS(app)
@@ -51,17 +52,37 @@ def area_name_faulty_lp(area_name):
         return "\n".join(data[area_name]['faulty_lp'].keys()), 200
     return "No faulty lights", 204
 
-@app.route('/<area_name>/<light_name>/<key>', methods=['GET'])
+@app.route('/<path:area_name>/<path:light_name>/<path:key>', methods=['GET'])
 def area_name_light_name_key(area_name, light_name, key):
     data = load_database()
-    try:
-        return data[area_name]['lp'][light_name][key], 200
-    except KeyError:
-        return "Key/Light/Area not found", 404
 
-@app.route('/<area_name>/<light_name>/lpdetails', methods=['GET'])
+    # Debugging logs
+    # print(f"Received request for: {area_name}/{light_name}/{key}")
+
+    # Decode URL parameters
+    area_name = unquote(area_name)
+    full_light_name = f"{light_name}/{key.split('/')[0]}"  # Rebuild the light name
+    key = "/".join(key.split('/')[1:])  # Extract the actual key
+
+    # print(f"Decoded values: Area: {area_name}, Light: {full_light_name}, Key: {key}")
+
+    if area_name in data and "lp" in data[area_name]:
+        if full_light_name in data[area_name]['lp'] and key in data[area_name]['lp'][full_light_name]:
+            print(f"Returning: {data[area_name]['lp'][full_light_name][key]}")
+            return data[area_name]['lp'][full_light_name][key], 200
+
+    print("404 - Key/Light/Area not found")
+    return "Key/Light/Area not found", 404
+
+
+@app.route('/<path:area_name>/<path:light_name>/lpdetails', methods=['GET'])
 def area_name_light_name_lpdetails(area_name, light_name):
     data = load_database()
+    
+    # Decode URL parameters
+    area_name = unquote(area_name)
+    light_name = unquote(light_name)
+
     return jsonify(data.get(area_name, {}).get('lp', {}).get(light_name, "Light not found")), 200
 
 @app.route('/ir', methods=['POST'])
