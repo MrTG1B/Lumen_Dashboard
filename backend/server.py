@@ -117,14 +117,26 @@ def receive_fault_data():
 
 @app.route('/fault_search', methods=['POST'])
 def fault_search():
-    content=request.json
-    area_name=content.get("area")
+    # content=request.json
+    # area_name=content.get("area")
     data=load_database()
-    lp_list = data[area_name]["lp"]
-    with concurrent.futures.ThreadPoolExecutor() as executor:  # Asynchronous execution
-        for key, value in lp_list.items():
-            futures = []
-            futures.append(executor.submit(requests.get, "http://" + lp_list[key]["ip"] + "/fault_scan"))
+    lp_list = data["DG Block(Newtown)"]["lp"]
+    # with concurrent.futures.ThreadPoolExecutor() as executor:  # Asynchronous execution
+    for key, value in lp_list.items():
+        # futures = []
+        # futures.append(executor.submit(requests.get, "http://" + lp_list[key]["ip"] + "/fault_scan"))
+        try:
+            response=requests.get("http://" + lp_list[key]["ip"] + "/fault_scan")
+            if response.status_code == 200:
+                if response.text == "0":
+                    data["DG Block(Newtown)"]["faulty_lp"][key]=lp_list[key]
+                    data["DG Block(Newtown)"]["lp"][key]["faulty"] = True
+                else:
+                    data["DG Block(Newtown)"]["faulty_lp"].pop(key, None)
+                    data["DG Block(Newtown)"]["lp"][key]["faulty"] = False
+        except:
+            pass
+    save_database(data)
     # print(f"Received Fault Search: {content}")
     return jsonify({"status": "success"}), 200
 

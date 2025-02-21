@@ -48,7 +48,7 @@
                 "energy": "0.5kWh",
                 "installation_date": "01-03-2023",
                 "last_service_date": "01-03-2023",
-                "fault_status": "Faulty"
+                "fault_status": "No Fault"
             },
             "L/P005": {
                 "name": "L/P005",
@@ -60,12 +60,9 @@
                 "energy": "0.5kWh",
                 "installation_date": "01-03-2023",
                 "last_service_date": "01-03-2023",
-                "fault_status": "Faulty"
+                "fault_status": "No Fault"
             }
         },
-        "faulty_lp": {
-            "L/P004": 4,
-            "L/P005": 5
-        }
+        "faulty_lp": {}
     }
 }
