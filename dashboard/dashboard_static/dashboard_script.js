@@ -285,7 +285,7 @@ async function createLightPostMap(light, area) {
         const encodedArea = encodeURIComponent(area);
 
         // Construct the URL using the encoded values
-        const response = await fetch(`https://6883cjlh-8080.inc1.devtunnels.ms/${encodedArea}/${encodedLight}/src`);
+        const response = await fetch(`https://6883cjlh-8080.inc1.devtunnels.ms/${encodedArea}/${encodedLight}/location_src`);
         
         // Check if the response is successful
         if (!response.ok) {
