@@ -1,13 +1,19 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # Enable CORS
-from flask_socketio import SocketIO
+from flask_cors import CORS
 import json
+import os
+import requests
+import concurrent.futures
 
 app = Flask(__name__)
 CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*")
 
 database_path = 'backend/database/database.json'
+
+# Ensure database file exists
+if not os.path.exists(database_path):
+    with open(database_path, 'w') as f:
+        json.dump({}, f)
 
 def load_database():
     with open(database_path) as f:
@@ -20,17 +26,6 @@ def save_database(data):
 @app.route('/')
 def home():
     return "Lumen Dashboard Server is Running!", 200
-
-@app.route('/<module_name>/ir/<state>', methods=['GET'])
-def module_name_ir_state(module_name, state):
-    data = load_database()
-    if module_name in data:
-        if state == 'on':
-            return 'Turned on', 200
-        elif state == 'off':
-            return 'Turned off', 200
-        return 'Invalid state', 400
-    return 'Module not found', 404
 
 @app.route('/arealist', methods=['GET'])
 def arealist():
@@ -69,16 +64,49 @@ def area_name_light_name_lpdetails(area_name, light_name):
     data = load_database()
     return jsonify(data.get(area_name, {}).get('lp', {}).get(light_name, "Light not found")), 200
 
-@app.route('/data', methods=['POST'])
-def receive_data():
+@app.route('/ir', methods=['POST'])
+def receive_ir_state():
     content = request.json
-    print(f"Received Data: {content}")
+    print(f"Received IR Data: {content}")
+    
+    data = load_database()
+    lp_list = data["DG Block(Newtown)"]["lp"]
+    
+    with concurrent.futures.ThreadPoolExecutor() as executor:  # Asynchronous execution
+        for key, value in lp_list.items():
+            if value["ip"] == content["deviceID"]:
+                key_index = list(lp_list.keys()).index(key)
+                
+                if content["irState"] == 1:
+                    futures = []
+                    
+                    if key_index != 0 and key_index != len(lp_list) - 1:
+                        futures.append(executor.submit(requests.get, "http://" + lp_list[list(lp_list.keys())[key_index-1]]["ip"] + "/led/on"))
+                        futures.append(executor.submit(requests.get, "http://" + lp_list[list(lp_list.keys())[key_index+1]]["ip"] + "/led/on"))
+                    
+                    elif key_index == 0:
+                        futures.append(executor.submit(requests.get, "http://" + lp_list[list(lp_list.keys())[key_index+1]]["ip"] + "/led/on"))
+                    
+                    elif key_index == len(lp_list) - 1:
+                        futures.append(executor.submit(requests.get, "http://" + lp_list[list(lp_list.keys())[key_index-1]]["ip"] + "/led/on"))
+
     return jsonify({"status": "success"}), 200
 
-@app.route('/energy', methods=['POST'])
-def receive_energy_data():
+@app.route('/data', methods=['POST'])
+def received_data():
     content = request.json
-    print(f"Received Energy Data: {content}")
+    print(f"Received Data: {content}")
+    data=load_database()
+    lp_list = data["DG Block(Newtown)"]["lp"]
+    for key, value in lp_list.items():
+        if value["ip"] == content["deviceID"]:
+            data["DG Block(Newtown)"]["lp"][key]["current"]=content["current"]
+            data["DG Block(Newtown)"]["lp"][key]["energy"]=content["energy"]
+            # data["DG Block(Newtown)"]["lp"][key]["voltage"]=content["voltage"]
+            # data["DG Block(Newtown)"]["lp"][key]["power"]=data["DG Block(Newtown)"]["lp"][key]["current"]*data["DG Block(Newtown)"]["lp"][key]["voltage"]
+            break
+        
+        save_database(data)
     return jsonify({"status": "success"}), 200
 
 @app.route('/fault', methods=['POST'])
@@ -87,24 +115,18 @@ def receive_fault_data():
     print(f"Received Fault Data: {content}")
     return jsonify({"status": "success"}), 200
 
-@socketio.on('/led/on')
-def handle_led_on():
-    print("LED ON command received via Socket.IO")
-
-@socketio.on('/fault_search_result')
-def handle_fault_search_result(data):
-    print(f"Received fault search result from ESP32: {data}")
-    
-    # Forward the result to the client dashboard
-    socketio.emit('/fault_search_response', data)
-    
-@socketio.on('/fault_search')
-def handle_fault_search():
-    print("Client requested fault search")
-    
-    # Emit fault search request to ESP32
-    socketio.emit('/fault_search_esp')
-
+@app.route('/fault_search', methods=['POST'])
+def fault_search():
+    content=request.json
+    area_name=content.get("area")
+    data=load_database()
+    lp_list = data[area_name]["lp"]
+    with concurrent.futures.ThreadPoolExecutor() as executor:  # Asynchronous execution
+        for key, value in lp_list.items():
+            futures = []
+            futures.append(executor.submit(requests.get, "http://" + lp_list[key]["ip"] + "/fault_scan"))
+    # print(f"Received Fault Search: {content}")
+    return jsonify({"status": "success"}), 200
 
 if __name__ == "__main__":
-    socketio.run(app, host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)

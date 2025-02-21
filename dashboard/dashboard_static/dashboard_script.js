@@ -18,14 +18,12 @@ radioButtons.forEach((radio) => {
     });
 });
 
-const socket = io(); // Initialize Socket.IO connection
-
 document.getElementById('faultySearchBtn').addEventListener('click', async function() {
     this.classList.toggle('clicked');
-    
+
     // Store button reference
     const button = this;
-    
+
     let areaName = '';
     const areaRadio = document.querySelectorAll('input[name="arearadio"]');
 
@@ -44,31 +42,38 @@ document.getElementById('faultySearchBtn').addEventListener('click', async funct
         return;
     }
 
-    // Send fault search request to the server
-    socket.emit('/fault_search', { area: areaName });
+    try {
+        // Send fault search request to the server
+        const response = await fetch('https://6883cjlh-8080.inc1.devtunnels.ms/fault_search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ area: areaName })
+        });
 
-    console.log(`Fault search request sent for: ${areaName}`);
+        console.log(`Fault search request sent for: ${areaName}`);
 
-    // Remove the 'clicked' class after 10 seconds
-    setTimeout(async function() {
-        button.classList.remove('clicked');
-        
-        // Fetch the faulty light list after search
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+
+        // Wait for the response data
+        const data = await response.json();
+        console.log("Received server response:", data);
+
+        // Call the function only after receiving all data
         await createFaultyLightListButtons(areaName);
-        
-    }, 10000);
-});
 
-// Listen for fault search results from the server
-socket.on('/fault_search_response', function(data) {
-    console.log("Received fault search response:", data);
-
-    if (data.faults && data.faults.length > 0) {
-        createFaultyLightListButtons(data.area);
-    } else {
-        alert("No faults detected in the selected area.");
+    } catch (error) {
+        console.error("Error during fault search:", error);
+        alert("Failed to fetch fault data. Please try again.");
+    } finally {
+        // Remove 'clicked' class after everything is done
+        button.classList.remove('clicked');
     }
 });
+
 
 const timeText = document.getElementById("timeText");
 const dateText = document.getElementById("dateText");
