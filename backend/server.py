@@ -98,7 +98,7 @@ def receive_ir_state():
             if value["ip"] == content["deviceID"]:
                 key_index = list(lp_list.keys()).index(key)
                 
-                if content["irState"] == 1:
+                if content["irState"] == "1":
                     futures = []
                     
                     if key_index != 0 and key_index != len(lp_list) - 1:
