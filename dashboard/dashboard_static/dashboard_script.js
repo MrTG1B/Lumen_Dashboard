@@ -189,7 +189,7 @@ function createRadioList(mode,text_list,listId,radioClassName,textClassName) {
             radioInput.checked = true; // Set the first radio button as checked
             getMap(light);
             createLightListButtons(light);
-            createFaultyLightListButtons(light);
+            // createFaultyLightListButtons(light);
         }
 
         const text = document.createElement('p');
