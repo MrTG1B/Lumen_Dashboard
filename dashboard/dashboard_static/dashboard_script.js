@@ -42,36 +42,45 @@ document.getElementById('faultySearchBtn').addEventListener('click', async funct
         return;
     }
 
-    try {
-        // Send fault search request to the server
-        const response = await fetch('https://6883cjlh-8080.inc1.devtunnels.ms/fault_search', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ area: areaName })
-        });
-
-        console.log(`Fault search request sent for: ${areaName}`);
-
-        if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
-        }
-
-        // Wait for the response data
-        const data = await response.json();
-        console.log("Received server response:", data);
-
-        // Call the function only after receiving all data
-        await createFaultyLightListButtons(areaName);
-
-    } catch (error) {
-        console.error("Error during fault search:", error);
-        alert("Failed to fetch fault data. Please try again.");
-    } finally {
-        // Remove 'clicked' class after everything is done
+    setTimeout(async function() {
         button.classList.remove('clicked');
-    }
+        
+        // Fetch the faulty light list after search
+        await createFaultyLightListButtons(areaName);
+        
+    }, 10000);
+
+
+    // try {
+    //     // Send fault search request to the server
+    //     const response = await fetch('https://6883cjlh-8080.inc1.devtunnels.ms/fault_search', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ area: areaName })
+    //     });
+
+    //     console.log(`Fault search request sent for: ${areaName}`);
+
+    //     if (!response.ok) {
+    //         throw new Error(`Server error: ${response.status}`);
+    //     }
+
+    //     // Wait for the response data
+    //     const data = await response.json();
+    //     console.log("Received server response:", data);
+
+    //     // Call the function only after receiving all data
+    //     await createFaultyLightListButtons(areaName);
+
+    // } catch (error) {
+    //     console.error("Error during fault search:", error);
+    //     alert("Failed to fetch fault data. Please try again.");
+    // } finally {
+    //     // Remove 'clicked' class after everything is done
+    //     button.classList.remove('clicked');
+    // }
 });
 
 

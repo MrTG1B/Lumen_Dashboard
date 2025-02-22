@@ -95,10 +95,15 @@ def receive_ir_state():
     
     with concurrent.futures.ThreadPoolExecutor() as executor:  # Asynchronous execution
         for key, value in lp_list.items():
-            if value["ip"] == content["deviceID"]:
+            # Received IR Data: {'deviceID': '192.168.83.205', 'irState': 0}
+            # print(f"Device ID: {type(content['deviceID'])}")
+            # print(f"IR State: {content['irState']}")
+            # print(f"Value: {value}")
+            if str(value["ip"]).strip() == str(content["deviceID"]).strip():
+                print(f"Device ID: {content['deviceID']}")
                 key_index = list(lp_list.keys()).index(key)
                 
-                if content["irState"] == "1":
+                if content["irState"] == 1:
                     futures = []
                     
                     if key_index != 0 and key_index != len(lp_list) - 1:
